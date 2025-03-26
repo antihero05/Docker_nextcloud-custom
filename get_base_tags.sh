@@ -12,9 +12,9 @@ function get_docker_tags() {
     local tagsUri="$TAGS_URI_BASE"
     while [ "$tagsUri" != "null" ]; do
         result="$(curl --silent --get -H "Accept: application/json" $tagsUri)"
-        # Filter tags which are updated within the last 3 days
+        # Filter tags which are updated within the last 7 days
         # Timestamp has structure: "last_updated":"2022-09-20T21:26:08.520696Z"
-        tmp_tags="$(echo $result | jq -r '.results[] | select(.last_updated | sub(".[0-9]+Z$"; "Z") | fromdateiso8601 > (now - 259200)) | select(.name | test ("^\\d\\d")) | .name')"
+        tmp_tags="$(echo $result | jq -r '.results[] | select(.last_updated | sub(".[0-9]+Z$"; "Z") | fromdateiso8601 > (now - 604800)) | select(.name | test ("^\\d\\d")) | .name')"
         for tmp_tag in $tmp_tags; do
             tags+=("$tmp_tag")
         done
